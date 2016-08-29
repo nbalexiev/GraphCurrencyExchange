@@ -1,0 +1,85 @@
+﻿namespace CurrencyExchange
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    public abstract class AbstractWorld<T> : IGraph<Country> where T : IGraphWalker<Country> 
+    {
+        public T GraphWalker { get; set; }
+
+        public CurrencyExchangeStrategy CurrencyExchangeStrategy { get; set; }
+
+        public abstract int Size { get; }
+
+        public abstract List<IGraphNode<Country>> Nodes { get; }
+
+        protected AbstractWorld()
+        {
+            this.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
+        }
+
+        public abstract void AddNode(IGraphNode<Country> node);
+
+        public abstract void AddNode(Country value);
+
+        public abstract void AddEdge(IGraphNode<Country> from, IGraphNode<Country> to);
+
+        public abstract bool Contains(Country value);
+
+        public abstract void PrintWorld();
+
+        public abstract void Exchange();
+
+        public abstract int IslandCount();
+
+        public abstract void PrintState();
+
+        public bool CanExchange()
+        {
+            return this.IslandCount() == 1;
+        }
+
+        public virtual bool IsExchanged()
+        {
+            int countriesCount = this.Size;
+            bool isExchanged = true;
+            this.GraphWalker.DFS(
+                this.Nodes.First(),
+                new Dictionary<Country, bool>(),
+                node => isExchanged &= node.Value.Currencies.Keys.Count == countriesCount);
+
+            return isExchanged;
+        }
+
+        public int IterationsTillExchanged(bool printState = true)
+        {
+            int result = 0;
+            if (printState)
+            {
+                this.PrintState();
+            }
+            
+                
+            while (!this.IsExchanged())
+            {
+                this.Exchange();
+                if (printState)
+                {
+                    this.PrintState();
+                }
+                result++;
+            }
+
+            return result;
+        }
+
+        protected void ClearExchangeData()
+        {
+            foreach (IGraphNode<Country> country in this.Nodes)
+            {
+                country.Value.ExchangedWith.Clear();
+            }
+        }
+    }
+}
