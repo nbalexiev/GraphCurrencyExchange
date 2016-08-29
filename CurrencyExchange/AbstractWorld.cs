@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
 
     public abstract class AbstractWorld<T> : ICloneable, IGraph<Country> where T : IGraphWalker<Country> 
     {
@@ -16,7 +17,7 @@
 
         protected AbstractWorld()
         {
-            this.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
+            this.CurrencyExchangeStrategy = new SimultaneousCurrencyExchanger();
         }
 
         public abstract void AddNode(IGraphNode<Country> node);
@@ -52,21 +53,21 @@
             return isExchanged;
         }
 
-        public int IterationsTillExchanged(bool printState = true)
+        public int IterationsTillExchanged(bool printState = true, bool endlessLoop = false, int sleepInterval = 0)
         {
             int result = 0;
             if (printState)
             {
                 this.PrintState();
             }
-            
                 
-            while (!this.IsExchanged())
+            while (!this.IsExchanged() || endlessLoop)
             {
                 this.Exchange();
                 if (printState)
                 {
                     this.PrintState();
+                    Thread.Sleep(sleepInterval);
                 }
                 result++;
             }

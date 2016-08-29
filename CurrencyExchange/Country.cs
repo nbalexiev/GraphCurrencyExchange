@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
 
     public class Country : ICloneable, IMatrixGraphNode<Country>
@@ -43,7 +44,7 @@
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            foreach(KeyValuePair<int, double> kv in this.Currencies)
+            foreach(KeyValuePair<int, double> kv in this.Currencies.OrderBy(kvp => kvp.Key))
             {
                 sb.Append(string.Format("[{0}:{1}],", CurrencyGenerator.GetCurrencySymbol(kv.Key), kv.Value));
             }

@@ -18,6 +18,7 @@ namespace CurrencyExchangeTests
                 };
 
             MatrixWorld world = new MatrixWorld(map);
+            world.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
 
             Assert.AreEqual(1, world.IterationsTillExchanged());
         }
@@ -33,6 +34,7 @@ namespace CurrencyExchangeTests
             };
 
             MatrixWorld world = new MatrixWorld(map);
+            world.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
 
             Assert.AreEqual(3, world.IterationsTillExchanged());
         }
@@ -63,6 +65,7 @@ namespace CurrencyExchangeTests
             };
 
             MatrixWorld world = new MatrixWorld(map);
+            world.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
 
             world.Exchange();
             world.PrintState();
@@ -176,7 +179,7 @@ namespace CurrencyExchangeTests
             };
 
             MatrixWorld world = new MatrixWorld(map);
-            
+            world.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
 
             world.Exchange();
             world.PrintState();
@@ -235,6 +238,7 @@ namespace CurrencyExchangeTests
 
             MatrixWorld world = new MatrixWorld(map);
             world.PrintState();
+            world.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
 
             world.IterationsTillExchanged(printState: true);
 

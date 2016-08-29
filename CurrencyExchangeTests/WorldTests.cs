@@ -32,6 +32,7 @@
             Country c5 = new Country(4);
 
             World world = new World();
+            world.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
             world.AddNode(c1);
             world.AddNode(c2);
             world.AddNode(c3);
@@ -55,6 +56,7 @@
             Country c5 = new Country(4);
 
             World world = new World();
+            world.CurrencyExchangeStrategy = new SimultaneousCurrencyExchanger();
             world.AddNode(c1);
             world.AddNode(c2);
             world.AddNode(c3);
@@ -64,7 +66,6 @@
             world.AddEdge(c2, c4);
             world.AddEdge(c3, c4);
             world.AddEdge(c4, c5);
-            world.CurrencyExchangeStrategy = new SimultaneousCurrencyExchanger();
 
             Assert.AreEqual(3, world.IterationsTillExchanged());
         }
@@ -138,6 +139,7 @@
             Country c3 = new Country(2);
 
             World world = new World();
+            world.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
             world.AddNode(c1);
             world.AddNode(c2);
             world.AddNode(c3);
@@ -263,6 +265,7 @@
             Country c5 = new Country(4);
 
             World world = new World();
+            world.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
             world.AddNode(c1);
             world.AddNode(c2);
             world.AddNode(c3);

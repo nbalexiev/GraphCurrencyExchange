@@ -65,7 +65,7 @@
             MatrixWorld world = WorldGenerator.GetMatrixWorld(size);
             world.PrintWorld();
             Console.WriteLine();
-            Console.WriteLine(world.IterationsTillExchanged());
+            Console.WriteLine(world.IterationsTillExchanged(printState: true, endlessLoop: true, sleepInterval: 5000));
 
             Console.ReadLine();
         }
