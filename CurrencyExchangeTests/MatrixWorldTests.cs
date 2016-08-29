@@ -38,7 +38,23 @@ namespace CurrencyExchangeTests
         }
 
         [TestMethod]
-        public void TestExchangeIterations_ThreeCountries()
+        public void TestExchangeIterations_FiveCountries_Simulteneous()
+        {
+            Country[,] map = {
+                { null, null, null, new Country(0) },
+                { new Country(1), null, new Country(2), null },
+                { null, new Country(3), null, null },
+                { null, null, new Country(4), null }
+            };
+
+            MatrixWorld world = new MatrixWorld(map);
+            world.CurrencyExchangeStrategy = new SimultaneousCurrencyExchanger();
+
+            Assert.AreEqual(3, world.IterationsTillExchanged());
+        }
+
+        [TestMethod]
+        public void TestExchange_ThreeCountries()
         {
             Country[,] map = {
                 { new Country(0), null, null },
@@ -95,7 +111,7 @@ namespace CurrencyExchangeTests
         }
 
         [TestMethod]
-        public void TestExchangeIterations_ThreeCountries_Simultaneous()
+        public void TestExchange_ThreeCountries_Simultaneous()
         {
             Country[,] map = {
                 { new Country(0), null, null },
@@ -109,7 +125,7 @@ namespace CurrencyExchangeTests
             world.PrintState();
 
             Assert.AreEqual(90, world.Nodes[0].Value.Currencies[0]);
-            Assert.AreEqual(9, world.Nodes[0].Value.Currencies[1]);
+            Assert.AreEqual(10, world.Nodes[0].Value.Currencies[1]);
             Assert.IsFalse(world.Nodes[0].Value.Currencies.ContainsKey(2));
 
             Assert.AreEqual(10, world.Nodes[1].Value.Currencies[0]);
@@ -117,38 +133,38 @@ namespace CurrencyExchangeTests
             Assert.AreEqual(10, world.Nodes[1].Value.Currencies[2]);
 
             Assert.IsFalse(world.Nodes[2].Value.Currencies.ContainsKey(0));
+            Assert.AreEqual(9, world.Nodes[2].Value.Currencies[1]);
             Assert.AreEqual(90, world.Nodes[2].Value.Currencies[2]);
-            Assert.AreEqual(10, world.Nodes[2].Value.Currencies[1]);
 
             world.Exchange();
             world.PrintState();
 
-            Assert.AreEqual(81.9, world.Nodes[0].Value.Currencies[0]);
-            Assert.AreEqual(15.39, world.Nodes[0].Value.Currencies[1]);
-            Assert.AreEqual(0.9, world.Nodes[0].Value.Currencies[2]);
+            Assert.AreEqual(82, world.Nodes[0].Value.Currencies[0]);
+            Assert.AreEqual(17.1, world.Nodes[0].Value.Currencies[1]);
+            Assert.AreEqual(1, world.Nodes[0].Value.Currencies[2]);
 
             Assert.AreEqual(17.1, world.Nodes[1].Value.Currencies[0]);
             Assert.AreEqual(67.51, world.Nodes[1].Value.Currencies[1]);
             Assert.AreEqual(17.1, world.Nodes[1].Value.Currencies[2]);
 
-            Assert.AreEqual(1, world.Nodes[2].Value.Currencies[0]);
-            Assert.AreEqual(17.1, world.Nodes[2].Value.Currencies[1]);
-            Assert.AreEqual(82, world.Nodes[2].Value.Currencies[2]);
+            Assert.AreEqual(0.9, world.Nodes[2].Value.Currencies[0]);
+            Assert.AreEqual(15.39, world.Nodes[2].Value.Currencies[1]);
+            Assert.AreEqual(81.9, world.Nodes[2].Value.Currencies[2]);
 
             world.Exchange();
             world.PrintState();
 
-            Assert.AreEqual(75.25, world.Nodes[0].Value.Currencies[0]);
-            Assert.AreEqual(19.93, world.Nodes[0].Value.Currencies[1]);
-            Assert.AreEqual(2.35, world.Nodes[0].Value.Currencies[2]);
+            Assert.AreEqual(75.51, Math.Round(world.Nodes[0].Value.Currencies[0], 2));
+            Assert.AreEqual(22.14, Math.Round(world.Nodes[0].Value.Currencies[1], 2));
+            Assert.AreEqual(2.61, Math.Round(world.Nodes[0].Value.Currencies[2], 2));
 
-            Assert.AreEqual(22.14, world.Nodes[1].Value.Currencies[0]);
-            Assert.AreEqual(57.93, world.Nodes[1].Value.Currencies[1]);
-            Assert.AreEqual(22.14, world.Nodes[1].Value.Currencies[2]);
+            Assert.AreEqual(22.14, Math.Round(world.Nodes[1].Value.Currencies[0], 2));
+            Assert.AreEqual(57.93, Math.Round(world.Nodes[1].Value.Currencies[1], 2));
+            Assert.AreEqual(22.14, Math.Round(world.Nodes[1].Value.Currencies[2], 2));
 
-            Assert.AreEqual(2.61, world.Nodes[2].Value.Currencies[0]);
-            Assert.AreEqual(22.14, world.Nodes[2].Value.Currencies[1]);
-            Assert.AreEqual(75.51, world.Nodes[2].Value.Currencies[2]);
+            Assert.AreEqual(2.35, Math.Round(world.Nodes[2].Value.Currencies[0], 2));
+            Assert.AreEqual(19.93, Math.Round(world.Nodes[2].Value.Currencies[1], 2));
+            Assert.AreEqual(75.25, Math.Round(world.Nodes[2].Value.Currencies[2], 2));
         }
 
         [TestMethod]
@@ -180,6 +196,34 @@ namespace CurrencyExchangeTests
         }
 
         [TestMethod]
+        public void TestExchange_TwoCountries_2x2_Simulteneous()
+        {
+            Country[,] map = {
+                { new Country(0), null },
+                { new Country(1), null }
+            };
+
+            MatrixWorld world = new MatrixWorld(map);
+            world.CurrencyExchangeStrategy = new SimultaneousCurrencyExchanger();
+
+            world.Exchange();
+            world.PrintState();
+
+            Assert.AreEqual(90, world.Nodes[0].Value.Currencies[0]);
+            Assert.AreEqual(10, world.Nodes[0].Value.Currencies[1]);
+            Assert.AreEqual(10, world.Nodes[1].Value.Currencies[0]);
+            Assert.AreEqual(90, world.Nodes[1].Value.Currencies[1]);
+
+            world.Exchange();
+            world.PrintState();
+
+            Assert.AreEqual(82, world.Nodes[0].Value.Currencies[0]);
+            Assert.AreEqual(18, world.Nodes[0].Value.Currencies[1]);
+            Assert.AreEqual(18, world.Nodes[1].Value.Currencies[0]);
+            Assert.AreEqual(82, world.Nodes[1].Value.Currencies[1]);
+        }
+
+        [TestMethod]
         public void TestExchange_FiveCountries_4x4()
         {
             Country[,] map = {
@@ -190,6 +234,34 @@ namespace CurrencyExchangeTests
             };
 
             MatrixWorld world = new MatrixWorld(map);
+            world.PrintState();
+
+            world.IterationsTillExchanged(printState: true);
+
+            for (int i = 0; i < 5; i++)
+            {
+                double sum = 0;
+                for (int j = 0; j < 5; j++)
+                {
+                    sum += world.Nodes[j].Value.Currencies[i];
+                }
+
+                Assert.AreEqual(100.00, Math.Round(sum, 2), "Amounts don't sum to 100 for currency " + i);
+            }
+        }
+
+        [TestMethod]
+        public void TestExchange_FiveCountries_4x4_Simulteneous()
+        {
+            Country[,] map = {
+                { null, null, null, new Country(0) },
+                { new Country(1), null, new Country(2), null },
+                { null, new Country(3), null, null },
+                { null, null, new Country(4), null }
+            };
+
+            MatrixWorld world = new MatrixWorld(map);
+            world.CurrencyExchangeStrategy = new SimultaneousCurrencyExchanger();
             world.PrintState();
 
             world.IterationsTillExchanged(printState: true);

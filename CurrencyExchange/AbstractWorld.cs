@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public abstract class AbstractWorld<T> : IGraph<Country> where T : IGraphWalker<Country> 
+    public abstract class AbstractWorld<T> : ICloneable, IGraph<Country> where T : IGraphWalker<Country> 
     {
         public T GraphWalker { get; set; }
 
@@ -81,5 +81,7 @@
                 country.Value.ExchangedWith.Clear();
             }
         }
+
+        public abstract object Clone();
     }
 }

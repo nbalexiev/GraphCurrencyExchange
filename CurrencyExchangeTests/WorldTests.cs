@@ -8,6 +8,69 @@
     public class WorldTests
     {
         [TestMethod]
+        public void TestExchangeIterations_TwoCountries()
+        {
+            Country c1 = new Country(0);
+            Country c2 = new Country(1);
+
+            World world = new World();
+            world.CurrencyExchangeStrategy = new SequentialCurrencyExchanger();
+            world.AddNode(c1);
+            world.AddNode(c2);
+            world.AddEdge(c1, c2);
+
+            Assert.AreEqual(1, world.IterationsTillExchanged());
+        }
+
+        [TestMethod]
+        public void TestExchangeIterations_FiveCountries()
+        {
+            Country c1 = new Country(0);
+            Country c2 = new Country(1);
+            Country c3 = new Country(2);
+            Country c4 = new Country(3);
+            Country c5 = new Country(4);
+
+            World world = new World();
+            world.AddNode(c1);
+            world.AddNode(c2);
+            world.AddNode(c3);
+            world.AddNode(c4);
+            world.AddNode(c5);
+            world.AddEdge(c1, c3);
+            world.AddEdge(c2, c4);
+            world.AddEdge(c3, c4);
+            world.AddEdge(c4, c5);
+
+            Assert.AreEqual(3, world.IterationsTillExchanged());
+        }
+
+        [TestMethod]
+        public void TestExchangeIterations_FiveCountries_Simulteneous()
+        {
+            Country c1 = new Country(0);
+            Country c2 = new Country(1);
+            Country c3 = new Country(2);
+            Country c4 = new Country(3);
+            Country c5 = new Country(4);
+
+            World world = new World();
+            world.AddNode(c1);
+            world.AddNode(c2);
+            world.AddNode(c3);
+            world.AddNode(c4);
+            world.AddNode(c5);
+            world.AddEdge(c1, c3);
+            world.AddEdge(c2, c4);
+            world.AddEdge(c3, c4);
+            world.AddEdge(c4, c5);
+            world.CurrencyExchangeStrategy = new SimultaneousCurrencyExchanger();
+
+            Assert.AreEqual(3, world.IterationsTillExchanged());
+        }
+
+
+        [TestMethod]
         public void TestExchange_TwoCountries()
         {
             Country c1 = new Country(0);
@@ -156,8 +219,8 @@
             Assert.AreEqual(10, world.Nodes[1].Value.Currencies[2]);
 
             Assert.IsFalse(world.Nodes[2].Value.Currencies.ContainsKey(0));
-            Assert.AreEqual(90, world.Nodes[2].Value.Currencies[2]);
             Assert.AreEqual(10, world.Nodes[2].Value.Currencies[1]);
+            Assert.AreEqual(90, world.Nodes[2].Value.Currencies[2]);
 
             world.Exchange();
             world.PrintState();
@@ -177,17 +240,17 @@
             world.Exchange();
             world.PrintState();
 
-            Assert.AreEqual(75.25, world.Nodes[0].Value.Currencies[0]);
-            Assert.AreEqual(19.93, world.Nodes[0].Value.Currencies[1]);
-            Assert.AreEqual(2.35, world.Nodes[0].Value.Currencies[2]);
+            Assert.AreEqual(75.25, Math.Round(world.Nodes[0].Value.Currencies[0], 2));
+            Assert.AreEqual(19.93, Math.Round(world.Nodes[0].Value.Currencies[1], 2));
+            Assert.AreEqual(2.35, Math.Round(world.Nodes[0].Value.Currencies[2], 2));
 
-            Assert.AreEqual(22.14, world.Nodes[1].Value.Currencies[0]);
-            Assert.AreEqual(57.93, world.Nodes[1].Value.Currencies[1]);
-            Assert.AreEqual(22.14, world.Nodes[1].Value.Currencies[2]);
+            Assert.AreEqual(22.14, Math.Round(world.Nodes[1].Value.Currencies[0], 2));
+            Assert.AreEqual(57.93, Math.Round(world.Nodes[1].Value.Currencies[1], 2));
+            Assert.AreEqual(22.14, Math.Round(world.Nodes[1].Value.Currencies[2], 2));
 
-            Assert.AreEqual(2.61, world.Nodes[2].Value.Currencies[0]);
-            Assert.AreEqual(22.14, world.Nodes[2].Value.Currencies[1]);
-            Assert.AreEqual(75.51, world.Nodes[2].Value.Currencies[2]);
+            Assert.AreEqual(2.61, Math.Round(world.Nodes[2].Value.Currencies[0], 2));
+            Assert.AreEqual(22.14, Math.Round(world.Nodes[2].Value.Currencies[1], 2));
+            Assert.AreEqual(75.51, Math.Round(world.Nodes[2].Value.Currencies[2], 2));
         }
 
         [TestMethod]
@@ -254,7 +317,7 @@
                     sum += world.Countries[j].Value.Currencies[i];
                 }
 
-                Assert.AreEqual(100, Math.Round(sum, 0), "Amounts don't sum to 100 for currency " + i);
+                Assert.AreEqual(100.00, Math.Round(sum, 2), "Amounts don't sum to 100 for currency " + i);
             }
         }
 

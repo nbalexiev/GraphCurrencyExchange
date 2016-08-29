@@ -161,11 +161,11 @@
             
             if (this.CurrencyExchangeStrategy.IsBuffered && this.buffer == null)
             {
-                this.buffer = new MatrixWorld(new Country[this.Rows, this.Cols]);
+                this.buffer = this.Clone() as MatrixWorld;
             }
 
             bool[,] visited = new bool[this.Rows, this.Cols];
-            this.GraphWalker.DFS(this, this.firstElement, visited, (c, neighbors) => { this.CurrencyExchangeStrategy.Exchange(c, neighbors, null); });
+            this.GraphWalker.DFS(this, this.firstElement, visited, (c, neighbors) => { this.CurrencyExchangeStrategy.Exchange(c, neighbors, this.buffer); });
 
             if(this.CurrencyExchangeStrategy.IsBuffered)
             {
@@ -184,6 +184,25 @@
                 node => isExchanged &= node.Value.Currencies.Keys.Count == countriesCount);
 
             return isExchanged;
+        }
+
+        public override object Clone()
+        {
+            MatrixWorld clone = new MatrixWorld(new Country[this.Rows,this.Cols]);
+
+            for (int i = 0; i < this.Rows; i++)
+            {
+                for (int j = 0; j < this.Cols; j++)
+                {
+                    if (this.Map[i, j] != null)
+                    {
+                        Country c = (Country)this.Map[i, j].Clone();
+                        clone.Map[i, j] = c;
+                    }
+                }
+            }
+
+            return clone;
         }
 
         private void SwapWorlds(MatrixWorld world, MatrixWorld otherWorld)

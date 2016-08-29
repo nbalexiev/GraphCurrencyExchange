@@ -49,9 +49,9 @@
                         initialNeighbourAmount = 0f;
                     }
 
-                    double amountFromNeighbor = Math.Round(GetRemainderAfterExchange(initialNeighbourAmount, neighbor.ExchangedWith.Count) * ExchangePercentage, 2);
+                    double amountFromNeighbor = GetRemainderAfterExchange(initialNeighbourAmount, neighbor.ExchangedWith.Count) * ExchangePercentage;
 
-                    country.Currencies[currencyCode] = Math.Round(initialLocalAmount + amountFromNeighbor, 2);
+                    country.Currencies[currencyCode] = initialLocalAmount + amountFromNeighbor;
                     
                     //Console.Write("Exchange: {0}->{1}[{2}]; ", neighbour.Value.Name, c.Name, neighbourCurrency);
                 }
@@ -67,7 +67,7 @@
         {
             //Exchanges happen one at a time, rather simulteneously.
             //Hence the remaider  for 10% exhchnage is: x - 0.1*x - 0.1(x-0.1*x)... which is (0.9^n)*x
-            return Math.Round(inititialAmount * Math.Pow((1 - ExchangePercentage), exchngingCountriesCount), 2);
+            return inititialAmount * Math.Pow((1 - ExchangePercentage), exchngingCountriesCount);
         }
 
         public bool IsBuffered

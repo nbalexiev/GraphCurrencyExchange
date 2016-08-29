@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CurrencyExchange
 {
-    public class World : AbstractWorld<GraphWalker<Country>>, ICloneable
+    public class World : AbstractWorld<GraphWalker<Country>>
     {
         public World()
         {
@@ -115,7 +115,7 @@ namespace CurrencyExchange
             return count;
         }
 
-        public object Clone()
+        public override object Clone()
         {
             World clone = new World();
             clone.GraphWalker = this.GraphWalker;
